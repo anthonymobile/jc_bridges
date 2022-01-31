@@ -41,12 +41,13 @@ map = folium.Map(location=[40.7178, -74.10], zoom_start=12, tiles ='Stamen Toner
 
 # populate popups
 def render_popup(row):
+    #FIXME: the weird line at the top
     html_data = [f"<tr><td>{label}</td><td>{value}</td></tr>" for (label, value) in row.items()]
     html=f"""
-    <h3> {row.FEATURES_DESC_006A.strip("'")} ({row.STRUCTURE_NUMBER_008})</h4><br>
-    <h4> Structural evaluation rating {row.STRUCTURAL_EVAL_067} out of 9</h4><br>
+    <h3> {row.FEATURES_DESC_006A.strip("'")} ({row.STRUCTURE_NUMBER_008})</h3>
+    <h4> Structural evaluation rating {row.STRUCTURAL_EVAL_067} out of 9</h4>
     <table>
-    {html_data}
+    {''.join([str(x) for x in html_data])}
     </table>
     """
     iframe = folium.IFrame(html=html, width=500, height=300)
@@ -54,7 +55,7 @@ def render_popup(row):
 
 # create markers
 for index, row in df.iterrows():
-    tooltip = f"Structure No.{row.STRUCTURE_NUMBER_008} built in {row.YEAR_BUILT_027}"
+    tooltip = f"Structure No.{row.STRUCTURE_NUMBER_008} built in {row.YEAR_BUILT_027}. Structural rating {row.STRUCTURAL_EVAL_067} out of 9."
     structural_rating = int(row.STRUCTURAL_EVAL_067)
     if structural_rating <= 3:
         folium.CircleMarker([row["lat"],row["lon"]],
